@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\Jobs\SendPostEmail;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -27,11 +29,11 @@ public function store(Request $request)
 
  $post->save();
 
+ $this->dispatch(new SendPostEmail($post));
+
  return redirect()->back()->with('status', 'Your post has been published successfully');
 
-
-
-
 }
+
 
 }
