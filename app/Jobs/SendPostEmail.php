@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Mail;
-use App\Mail\EmailPost;
 use App\Post;
 
 class SendPostEmail implements ShouldQueue
@@ -33,9 +32,15 @@ class SendPostEmail implements ShouldQueue
      */
     public function handle()
     {
-    $post = new EmailPost($this->post);
+     $data= array(
+     'title'=> $this->post->title,
+     'body'=> $this->post->body,
+    );
 
-    Mail::to('dotunjolaosho@yahoo.com')->send($post);
+    Mail::send('emails.post', $data, function($message){
+     $message->from('info@eduonix.com', 'Laravel Queues');
+     $message->to('dotunjolaosho@yahoo.com')->subject('There is a new post');
+  });
 
     }
 }
